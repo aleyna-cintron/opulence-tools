@@ -1,0 +1,285 @@
+@import "tailwindcss";
+
+/**
+ * CUSTOM VARIANT: Dark Mode
+ *
+ * @custom-variant dark (&:is(.dark *));
+ *
+ * This creates a custom Tailwind variant called "dark" that applies styles when an element
+ * is a descendant of an element with the "dark" class.
+ *
+ * Syntax breakdown:
+ * - @custom-variant: Tailwind v4 directive to define custom variants
+ * - dark: The name of the variant (use as dark:bg-black)
+ * - (&:is(.dark *)): CSS selector that matches
+ *   - &: Current element
+ *   - :is(): CSS pseudo-class that matches any selector in the list
+ *   - .dark *: Any descendant of an element with class "dark"
+ *
+ * This means dark:text-white becomes .dark * { color: white; }
+ * It's a class-based dark mode strategy where adding .dark to a parent
+ * (usually <html> or <body>) activates dark mode for all children.
+ */
+@custom-variant dark (&:is(.dark *));
+
+/**
+ * CSS CUSTOM PROPERTIES (CSS Variables)
+ *
+ * :root selector targets the document root (typically <html>)
+ * CSS variables are defined with -- prefix and accessed with var(--name)
+ *
+ * OKLCH Color Space:
+ * oklch(L C H) is a modern color format:
+ * - L (Lightness): 0 (black) to 1 (white)
+ * - C (Chroma): 0 (grayscale) to ~0.4 (vivid colors)
+ * - H (Hue): 0-360 degrees (color wheel)
+ *
+ * Benefits over RGB/HSL:
+ * - Perceptually uniform (equal changes look equally different to human eye)
+ * - Wider color gamut (more vivid colors)
+ * - Better for programmatic color manipulation
+ *
+ * Example: oklch(0.708 0 0) = mid-gray (70.8% lightness, no chroma, no hue)
+ */
+:root {
+  --font-size: 16px;
+
+  /* Light mode color palette */
+  --background: #ffffff;
+  --foreground: oklch(0.145 0 0);
+  --card: #ffffff;
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: #030213;
+  --primary-foreground: oklch(1 0 0);
+  --secondary: oklch(0.95 0.0058 264.53);
+  --secondary-foreground: #030213;
+  --muted: #ececf0;
+  --muted-foreground: #717182;
+  --accent: #e9ebef;
+  --accent-foreground: #030213;
+  --destructive: #d4183d;
+  --destructive-foreground: #ffffff;
+  --border: rgba(0, 0, 0, 0.1);
+  --input: transparent;
+  --input-background: #f3f3f5;
+  --switch-background: #cbced4;
+
+  /* Font weights */
+  --font-weight-medium: 500;
+  --font-weight-normal: 400;
+
+  /* Focus ring color */
+  --ring: oklch(0.708 0 0);
+
+  /* Chart colors for data visualization */
+  --chart-1: oklch(0.646 0.222 41.116);
+  --chart-2: oklch(0.6 0.118 184.704);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+
+  /* Border radius for consistent rounded corners */
+  --radius: 0.625rem;
+
+  /* Sidebar-specific colors */
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: #030213;
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+}
+
+/**
+ * DARK MODE OVERRIDES
+ *
+ * .dark class selector overrides the :root variables
+ * When .dark is applied to a parent element, these values take precedence
+ * CSS variable cascade means children inherit these new values automatically
+ */
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.145 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.145 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.985 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.396 0.141 25.723);
+  --destructive-foreground: oklch(0.637 0.237 25.331);
+  --border: oklch(0.269 0 0);
+  --input: oklch(0.269 0 0);
+  --ring: oklch(0.439 0 0);
+  --font-weight-medium: 500;
+  --font-weight-normal: 400;
+  --chart-1: oklch(0.488 0.243 264.376);
+  --chart-2: oklch(0.696 0.17 162.48);
+  --chart-3: oklch(0.769 0.188 70.08);
+  --chart-4: oklch(0.627 0.265 303.9);
+  --chart-5: oklch(0.645 0.246 16.439);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(0.269 0 0);
+  --sidebar-ring: oklch(0.439 0 0);
+}
+
+/**
+ * TAILWIND V4 THEME CONFIGURATION
+ *
+ * @theme inline: Tailwind v4 directive to define theme values inline
+ * This replaces the old tailwind.config.js theme.extend pattern
+ *
+ * Why the naming convention?
+ * - Tailwind expects --color-* for colors (e.g., bg-background becomes var(--color-background))
+ * - Tailwind expects --radius-* for border radius values
+ *
+ * This bridges our semantic CSS variables (--background) to Tailwind's naming
+ * convention (--color-background) so we can use them in utility classes:
+ * - bg-background → background-color: var(--color-background)
+ * - text-foreground → color: var(--color-foreground)
+ * - rounded-lg → border-radius: var(--radius-lg)
+ */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-input-background: var(--input-background);
+  --color-switch-background: var(--switch-background);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+
+  /*
+   * Radius scale using calc() for mathematical relationships
+   * Base radius is 0.625rem (10px), others are computed from it
+   */
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+/**
+ * BASE LAYER STYLES
+ *
+ * @layer base: Tailwind's base layer (lowest specificity)
+ * Styles here are automatically overridden by utility classes
+ *
+ * @apply: Applies Tailwind utility classes in CSS
+ * This is useful for setting defaults that can be easily overridden
+ */
+@layer base {
+  /**
+   * Universal selector with default border and outline ring
+   * outline-ring/50 means outline color uses --ring at 50% opacity
+   */
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  /**
+   * Body defaults
+   * These apply Tailwind utilities that reference our theme variables
+   */
+  body {
+    @apply bg-background text-foreground;
+  }
+
+  /**
+   * TYPOGRAPHY DEFAULTS
+   *
+   * These set default styles for HTML elements
+   * Because they're in @layer base, any Tailwind utility class
+   * (like text-sm, text-lg, font-bold) will override them
+   *
+   * This provides sensible defaults while maintaining Tailwind's utility-first approach
+   */
+
+  html {
+    font-size: var(--font-size);
+  }
+
+  h1 {
+    font-size: var(--text-2xl);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+  }
+
+  h2 {
+    font-size: var(--text-xl);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+  }
+
+  h3 {
+    font-size: var(--text-lg);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+  }
+
+  h4 {
+    font-size: var(--text-base);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+  }
+
+  label {
+    font-size: var(--text-base);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+  }
+
+  button {
+    font-size: var(--text-base);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+  }
+
+  input {
+    font-size: var(--text-base);
+    font-weight: var(--font-weight-normal);
+    line-height: 1.5;
+  }
+}
