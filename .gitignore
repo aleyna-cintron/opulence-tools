@@ -50,3 +50,6 @@ tmpclaude-*
 .idea/
 
 /app/generated/prisma
+
+# seed
+/db/seed.ts

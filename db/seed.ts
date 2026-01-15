@@ -1,20 +1,26 @@
-import { PrismaClient, Prisma } from "../app/generated/prisma/client";
-import { PrismaPg } from '@prisma/adapter-pg'
+import { PrismaClient } from "@/app/generated/prisma/client"
+import { PrismaNeon } from '@prisma/adapter-neon'
 import 'dotenv/config'
 import { products } from "./seed-data/products";
 
-const adapter = new PrismaPg({
-  connectionString: process.env.DATABASE_URL,
+const adapter = new PrismaNeon({
+  connectionString: process.env.DIRECT_URL,
 })
 
-const prisma = new PrismaClient({
-  adapter,
-});
+const prisma = new PrismaClient({ adapter });
 
 export async function main() {
   for (const product of products) {
-    await prisma.product.create({ data: product });
+    await prisma.product.createMany({ data: product, });
   }
 }
 
-main();
+main()
+  .then(() => console.log('✅ Database seeded successfully!'))
+  .catch((e) => {
+    console.error(e);
+    process.exit(1);
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
+  });
