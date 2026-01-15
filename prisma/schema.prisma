@@ -1,0 +1,98 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Product {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name        String
+  description String   @db.Text
+  price       Decimal  @db.Decimal(10, 2)
+  images      String[] @default([])
+  slug        String   @unique(map: "product_slug_idx")
+
+  // Supplier info (for fulfillment)
+  supplierName String?
+  supplierSku  String?
+  supplierUrl  String? // Optional link to supplier's product page
+
+  // Metadata
+  createdAt DateTime @default(now()) @db.Timestamp(6)
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  // orderItems OrderItem[]
+  orderItems OrderItem[]
+}
+
+model Order {
+  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+
+  // Customer info
+  customerEmail String
+  customerName  String?
+
+  // Shipping address
+  shippingAddress String
+  shippingCity    String
+  shippingState   String
+  shippingZip     String
+
+  // Pricing
+  subtotal  Decimal @db.Decimal(10, 2)
+  taxAmount Decimal @db.Decimal(10, 2)
+  total     Decimal @db.Decimal(10, 2)
+
+  // Order status
+  status String @default("PENDING")
+
+  // Payment
+  stripeSessionId String? @unique
+
+  // Fulfillment notes (optional)
+  notes String? @db.Text
+
+  // Timestamps
+  createdAt DateTime  @default(now())
+  paidAt    DateTime?
+  shippedAt DateTime?
+
+  // Relations
+  items OrderItem[]
+}
+
+model OrderItem {
+  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+
+  orderId String @db.Uuid
+  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  productId String  @db.Uuid
+  product   Product @relation(fields: [productId], references: [id])
+
+  // Snapshot at purchase
+  productName  String
+  supplierName String? // Snapshot of supplier
+  quantity     Int
+  price        Decimal @db.Decimal(10, 2)
+
+  createdAt DateTime @default(now())
+}
+
+model Admin {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String?
+  createdAt DateTime @default(now())
+}

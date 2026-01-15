@@ -11,7 +11,7 @@ export default function LoginPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Implement actual authentication logic
+    // TODO: Implement authentication logic
     alert(isSignUp ? 'Account created successfully!' : 'Welcome back!');
   };
 
