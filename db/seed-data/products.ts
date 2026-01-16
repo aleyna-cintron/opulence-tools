@@ -2,7 +2,7 @@ export const products =
     [
       {
       "name": "GRS® QC Gravers - Flat, #40",
-      "slug": "grs®-qc-gravers-flat-40",
+      "slug": "grs-qc-gravers-flat-40",
       "description": "High-quality QC graver, flat style, size #40. Professional engraving tool for precision work.",
       "price": "45.00",
       "supplierSku": "8559978",
@@ -11,7 +11,7 @@ export const products =
     },
     {
       "name": "GRS® QC Gravers - Knife, #1",
-      "slug": "grs®-qc-gravers-knife-1",
+      "slug": "grs-qc-gravers-knife-1",
       "description": "High-quality QC graver, knife style, size #1. Professional engraving tool for precision work.",
       "price": "45.00",
       "supplierSku": "8559985",
@@ -20,7 +20,7 @@ export const products =
     },
     {
       "name": "GRS® QC Gravers - Flat, #38",
-      "slug": "grs®-qc-gravers-flat-38",
+      "slug": "grs-qc-gravers-flat-38",
       "description": "High-quality QC graver, flat style, size #38. Professional engraving tool for precision work.",
       "price": "45.00",
       "supplierSku": "8559976",
@@ -29,7 +29,7 @@ export const products =
     },
     {
       "name": "GRS® GlenSteel™ Gravers - Blank",
-      "slug": "grs®-glensteel™-gravers-blank",
+      "slug": "grs-glensteel-gravers-blank",
       "description": "Premium GlenSteel graver blank for custom shaping. Professional quality tool steel.",
       "price": "35.00",
       "supplierSku": "8560004",
@@ -38,7 +38,7 @@ export const products =
     },
     {
       "name": "GRS® QC Gravers - Point Onglette, #2",
-      "slug": "grs®-qc-gravers-point-onglette-2",
+      "slug": "grs-qc-gravers-point-onglette-2",
       "description": "High-quality QC graver, point onglette style, size #2. Professional engraving tool.",
       "price": "45.00",
       "supplierSku": "8559702",
@@ -47,7 +47,7 @@ export const products =
     },
     {
       "name": "GRS® Super Pins - 1/4\" Shanks (Pkg. of 4)",
-      "slug": "grs®-super-pins-1-4-shanks-pkg-of-4",
+      "slug": "grs-super-pins-1-4-shanks-pkg-of-4",
       "description": "Professional quality super pins with 1/4\" shanks. Package of 4 pins for precision work.",
       "price": "28.00",
       "supplierSku": "8215998",
@@ -56,7 +56,7 @@ export const products =
     },
     {
       "name": "GRS® MicroBlock® Rubber Base",
-      "slug": "grs®-microblock®-rubber-base",
+      "slug": "grs-microblock-rubber-base",
       "description": "Rubber base for GRS MicroBlock system. Provides stable work surface.",
       "price": "32.00",
       "supplierSku": "8560338",
@@ -101,7 +101,7 @@ export const products =
     },
     {
       "name": "Foredom® Angle Grinder",
-      "slug": "foredom®-angle-grinder",
+      "slug": "foredom-angle-grinder",
       "description": "Professional Foredom angle grinder attachment. Compatible with Foredom flex shaft systems.",
       "price": "85.00",
       "supplierSku": "8501358",
@@ -110,7 +110,7 @@ export const products =
     },
     {
       "name": "GRS® BenchMate® Shellac Pad",
-      "slug": "grs®-benchmate®-shellac-pad",
+      "slug": "grs-benchmate-shellac-pad",
       "description": "Shellac pad for GRS BenchMate system. Provides secure holding for delicate work.",
       "price": "22.00",
       "supplierSku": "8560186",
@@ -119,7 +119,7 @@ export const products =
     },
     {
       "name": "GRS® C-Max QC Holders 1/8\" - Pkg. of 3",
-      "slug": "grs®-c-max-qc-holders-1-8-pkg-of-3",
+      "slug": "grs-c-max-qc-holders-1-8-pkg-of-3",
       "description": "C-Max quick change holders, 1/8\" size. Package of 3 holders for efficient tool changes.",
       "price": "38.00",
       "supplierSku": "8559947",
@@ -128,7 +128,7 @@ export const products =
     },
     {
       "name": "Gesswein® Tapered Diamond Poli Files - Set of 12",
-      "slug": "gesswein®-tapered-diamond-poli-files-set-of-12",
+      "slug": "gesswein-tapered-diamond-poli-files-set-of-12",
       "description": "Set of 12 tapered diamond polishing files. Professional quality for fine detail work.",
       "price": "165.00",
       "supplierSku": "2410813",
@@ -146,7 +146,7 @@ export const products =
     },
     {
       "name": "The Little Torch™ Propane Regulator",
-      "slug": "the-little-torch™-propane-regulator",
+      "slug": "the-little-torch-propane-regulator",
       "description": "Propane regulator designed for The Little Torch system. Precise gas control.",
       "price": "65.00",
       "supplierSku": "8301023",
@@ -155,7 +155,7 @@ export const products =
     },
     {
       "name": "The Little Torch™ Oxygen Regulator",
-      "slug": "the-little-torch™-oxygen-regulator",
+      "slug": "the-little-torch-oxygen-regulator",
       "description": "Oxygen regulator designed for The Little Torch system. Precise gas control.",
       "price": "65.00",
       "supplierSku": "8301021",
@@ -164,7 +164,7 @@ export const products =
     },
     {
       "name": "GRS® Standard Engravers Block",
-      "slug": "grs®-standard-engravers-block",
+      "slug": "grs-standard-engravers-block",
       "description": "Standard engraver's block from GRS. Essential workholding tool for engravers.",
       "price": "145.00",
       "supplierSku": "8216000",
@@ -173,7 +173,7 @@ export const products =
     },
     {
       "name": "GRS® GraverMach® AT Rev24",
-      "slug": "grs®-gravermach®-at-rev24",
+      "slug": "grs-gravermach-at-rev24",
       "description": "Professional pneumatic engraving system. Latest Rev24 model with advanced features.",
       "price": "2495.00",
       "supplierSku": "8569910",
