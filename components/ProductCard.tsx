@@ -1,11 +1,7 @@
 import Link from "next/link"
-import type { Product } from '@/app/types'
+import type { Product } from '@/types'
 
-type Props = {
-  product: Product
-}
-
-export function ProductCard({ product }: Props) {
+export function ProductCard({ product }: {product: Product}) {
   return (
     <Link
       href={`/products/${product.slug}`}
@@ -52,7 +48,7 @@ export function ProductCard({ product }: Props) {
           {product.description}
         </p>
         <p className="text-lg font-bold text-neutral-900">
-          ${product.price.toFixed(2)}
+          ${product.price}
         </p>
       </div>
     </Link>

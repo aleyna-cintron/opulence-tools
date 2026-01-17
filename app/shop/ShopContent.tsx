@@ -1,9 +1,10 @@
 "use client"
 
-import { useState, useMemo } from "react"
+import { useState, useMemo, useEffect, useTransition } from "react"
 import { Filter, SlidersHorizontal } from "lucide-react"
 import { ProductCard } from "@/components/ProductCard"
-import type { Product } from '@/app/types'
+import type { Product } from '@/types'
+import { getFilteredProducts, type ProductFilters } from '@/lib/actions'
 
 const PRICE_OPTIONS = [
   { label: "All Prices", value: "all" },
@@ -20,71 +21,43 @@ const SORT_OPTIONS = [
   { label: "Name: A-Z", value: "name" }
 ] as const
 
+type PriceRange = ProductFilters['priceRange']
+type SortBy = ProductFilters['sortBy']
+
 type Props = {
   products: Product[]
 }
 
 export function ShopContent({ products }: Props) {
-  const [priceRange, setPriceRange] = useState<string>("all")
-  const [sortBy, setSortBy] = useState<string>("featured")
+  const [priceRange, setPriceRange] = useState<PriceRange>("all")
+  const [sortBy, setSortBy] = useState<SortBy>("featured")
   const [supplierFilter, setSupplierFilter] = useState<string>("all")
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>(products)
+  const [isPending, startTransition] = useTransition()
 
-  // Get Unique Suppliers
-  const supplierOptions  = useMemo(() => {
+  // Get Unique Suppliers from initial products
+  const supplierOptions = useMemo(() => {
     const suppliers = Array.from(
       new Set(products.map((p) => p.supplierName).filter(Boolean))
     ) as string[]
 
     return [
-    { label: "All Brands", value: "all" },
-    ...suppliers.map(s => ({ label: s, value: s }))
+      { label: "All Brands", value: "all" },
+      ...suppliers.map(s => ({ label: s, value: s }))
     ]
-    
   }, [products])
 
-  // Filter and sort products
-  const filteredProducts = useMemo(() => {
-    let result = [...products]
-
-    // Filter by supplier
-    if (supplierFilter !== "all") {
-      result = result.filter((p) => p.supplierName === supplierFilter)
-    }
-
-    // Filter by price range
-    if (priceRange !== "all") {
-      result = result.filter((p) => {
-        switch (priceRange) {
-          case "under50":
-            return p.price < 50
-          case "50to100":
-            return p.price >= 50 && p.price < 100
-          case "100to200":
-            return p.price >= 100 && p.price < 200
-          case "over200":
-            return p.price >= 200
-          default:
-            return true
-        }
+  // Fetch filtered products from server when filters change
+  useEffect(() => {
+    startTransition(async () => {
+      const results = await getFilteredProducts({
+        brand: supplierFilter,
+        priceRange,
+        sortBy
       })
-    }
-
-    // Sort products
-    result.sort((a, b) => {
-      switch (sortBy) {
-        case "price-low":
-          return a.price - b.price
-        case "price-high":
-          return b.price - a.price
-        case "name":
-          return a.name.localeCompare(b.name)
-        default:
-          return 0
-      }
+      setFilteredProducts(results)
     })
-
-    return result
-  }, [products, supplierFilter, priceRange, sortBy])
+  }, [supplierFilter, priceRange, sortBy])
 
   return (
     <div className="min-h-screen bg-neutral-50">
@@ -177,7 +150,7 @@ export function ShopContent({ products }: Props) {
                 <label className="text-sm text-neutral-600">Sort by:</label>
                 <select
                   value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value)}
+                  onChange={(e) => setSortBy(e.target.value as SortBy)}
                   className="border border-neutral-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
                 >
                   {SORT_OPTIONS.map((option) => (
@@ -190,21 +163,23 @@ export function ShopContent({ products }: Props) {
             </div>
 
             {/* Products */}
-            {filteredProducts.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filteredProducts.map((product) => (
-                  <ProductCard key={product.id} product={product} />
-                ))}
-              </div>
-            ) : (
-              <div className="bg-white rounded-lg border border-neutral-200 p-12 text-center">
-                <Filter className="w-12 h-12 text-neutral-400 mx-auto mb-4" />
-                <h3 className="text-lg font-semibold text-neutral-900 mb-2">
-                  No products found
-                </h3>
-                <p className="text-neutral-600">Try adjusting your filters</p>
-              </div>
-            )}
+            <div className={isPending ? "opacity-50 pointer-events-none" : ""}>
+              {filteredProducts.length > 0 ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {filteredProducts.map((product) => (
+                    <ProductCard key={product.id} product={product} />
+                  ))}
+                </div>
+              ) : (
+                <div className="bg-white rounded-lg border border-neutral-200 p-12 text-center">
+                  <Filter className="w-12 h-12 text-neutral-400 mx-auto mb-4" />
+                  <h3 className="text-lg font-semibold text-neutral-900 mb-2">
+                    No products found
+                  </h3>
+                  <p className="text-neutral-600">Try adjusting your filters</p>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
