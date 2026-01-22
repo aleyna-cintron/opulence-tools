@@ -10,9 +10,11 @@ const adapter = new PrismaNeon({
 const prisma = new PrismaClient({ adapter });
 
 export async function main() {
-  for (const product of products) {
-    await prisma.product.createMany({ data: product, });
-  }
+  // Clear existing products
+  await prisma.product.deleteMany();
+
+  // Seed with new products
+  await prisma.product.createMany({ data: products });
 }
 
 main()

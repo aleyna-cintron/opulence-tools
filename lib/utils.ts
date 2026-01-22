@@ -1,8 +1,8 @@
 import type { Product } from '@/types/product'
 import type { Product as PrismaProduct } from '@/app/generated/prisma'
 
-export function serializeProducts(products: PrismaProduct[]): Product[] {
-  return products.map((p) => ({
+export function serializeProduct(p: PrismaProduct): Product {
+  return {
     id: p.id,
     name: p.name,
     description: p.description,
@@ -10,9 +10,12 @@ export function serializeProducts(products: PrismaProduct[]): Product[] {
     images: p.images,
     slug: p.slug,
     featured: p.featured,
-    supplierName: p.supplierName ?? '',
-    createdAt: p.createdAt
-  }))
+    supplierName: p.supplierName ?? ''
+  }
+}
+
+export function serializeProducts(products: PrismaProduct[]): Product[] {
+  return products.map(serializeProduct)
 }
 
 

@@ -3,16 +3,7 @@
 import Link from "next/link"
 import { ShoppingCart, TruckIcon, Shield, Check } from "lucide-react"
 import { ProductCard } from "@/components/ProductCard"
-
-type Product = {
-  id: string
-  name: string
-  description: string
-  price: number
-  images: string[]
-  slug: string
-  supplierName: string | null
-}
+import { Product } from "@/types/product"
 
 type Props = {
   product: Product
@@ -133,7 +124,7 @@ export function ProductDetail({ product, relatedProducts }: Props) {
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {relatedProducts.map((p) => (
-                <ProductCard key={p.id} product={p} />
+                <ProductCard key={p.id} product={product} />
               ))}
             </div>
           </div>

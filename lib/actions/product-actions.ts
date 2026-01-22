@@ -1,6 +1,6 @@
 'use server'
 import { prisma } from "@/db/client" 
-import { serializeProducts } from "../utils"
+import { serializeProduct, serializeProducts } from "../utils"
 
 export type ProductFilters = {
     supplier?: string
@@ -14,7 +14,7 @@ export type WhereFilter = {
     lt?: number;      // less than
     gte?: number;     // greater than or equal
     lte?: number;     // less than or equal
-  };
+    };
 }
 
 // function to get filtered and sorted products
@@ -86,4 +86,12 @@ export async function getSuppliers() {
     value: s.supplierName!,  // Safe to use ! because we filtered nulls
     label: s.supplierName!
   }))
+}
+
+export async function getProductBySlug(slug: string) {
+    const productBySlug = await prisma.product.findFirst({
+        where: { slug: slug },
+    })
+    if (!productBySlug) return null
+    return serializeProduct(productBySlug)
 }
