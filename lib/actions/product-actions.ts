@@ -66,7 +66,8 @@ export async function getFilteredProducts(filters: ProductFilters) {
 
     const products = await prisma.product.findMany({
         where,
-        orderBy
+        orderBy,
+        take: 25
     })
 
     return serializeProducts(products)

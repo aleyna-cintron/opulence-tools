@@ -25,9 +25,9 @@ model Product {
   createdAt DateTime @default(now()) @db.Timestamp(6)
   updatedAt DateTime @updatedAt
 
-  // Relations
-  // orderItems OrderItem[]
-  orderItems OrderItem[]
+  // Reverse relation: a Product can appear in many OrderItems.
+  // No column created — lets you query product.orderItems
+  orderItem OrderItem[]
 }
 
 model Order {
@@ -62,17 +62,22 @@ model Order {
   paidAt    DateTime?
   shippedAt DateTime?
 
-  // Relations
-  items OrderItem[]
+  // Reverse relation: an Order can have many OrderItems.
+  // No column created — lets you query order.items
+  item OrderItem[]
 }
 
 model OrderItem {
   id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
 
+  // Foreign key: stores the Order's UUID in this column
   orderId String @db.Uuid
+  // Relation: links orderId → Order.id. Cascade = deleting an Order deletes its items
   order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
 
+  // Foreign key: stores the Product's UUID in this column
   productId String  @db.Uuid
+  // Relation: links productId → Product.id
   product   Product @relation(fields: [productId], references: [id])
 
   // Snapshot at purchase
@@ -85,9 +90,75 @@ model OrderItem {
 }
 
 model Admin {
-  id        String   @id @default(cuid())
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   email     String   @unique
   password  String
   name      String?
   createdAt DateTime @default(now())
+}
+
+model User {
+  id            String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name          String    @default("NO_NAME")
+  email         String    @unique(map: "user_email_idx")
+  emailVerified DateTime? @db.Timestamp(6)
+  image         String?
+  password      String?
+  role          String    @default("USER")
+  address       Json?     @db.Json
+  paymentMethod String? // Paypal or Stripe customer ID
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Reverse relations: a User can have many Accounts and Sessions.
+  // These don't create columns — they let you query user.account / user.session
+  account Account[]
+  session Session[]
+}
+
+model Account {
+  // Foreign key: stores the User's UUID that owns this account
+  userId            String  @db.Uuid
+  type              String
+  provider          String // e.g. "google"
+  providerAccountId String // the user's ID on that provider
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  createdAt DateTime @default(now()) @db.Timestamp(6)
+  updatedAt DateTime @updatedAt
+
+  // Relation: links userId → User.id. Cascade = deleting a User deletes their accounts
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Composite ID: the combination of provider + providerAccountId is the unique key
+  // (no separate "id" column — the pair together identifies the row)
+  @@id([provider, providerAccountId])
+}
+
+model Session {
+  // ID: uses the session token string itself as the primary key (no UUID)
+  sessionToken String   @id
+  // Foreign key: stores the User's UUID that owns this session
+  userId       String   @db.Uuid
+  expires      DateTime @db.Timestamp(6)
+  // Relation: links userId → User.id. Cascade = deleting a User deletes their sessions
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @db.Timestamp(6)
+  updatedAt DateTime @updatedAt
+}
+
+model VerificationToken {
+  identifier String // e.g. the user's email
+  token      String // the unique verification token
+  expires    DateTime @db.Timestamp(6)
+
+  // Composite ID: identifier + token together form the primary key
+  @@id([identifier, token])
 }
