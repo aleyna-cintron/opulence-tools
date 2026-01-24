@@ -60,7 +60,7 @@ export function Navbar() {
               <Search className="w-5 h-5" />
             </button>
             <Link
-              href="/login"
+              href="/sign-in"
               className="hidden md:block text-sm font-medium text-neutral-600 hover:text-emerald-600 transition-colors"
             >
               Sign In
@@ -104,7 +104,7 @@ export function Navbar() {
               </Link>
             ))}
             <Link
-              href="/login"
+              href="/sign-in"
               className="block text-sm font-medium text-neutral-600 hover:text-emerald-600 transition-colors py-2"
               onClick={() => setMobileMenuOpen(false)}
             >

@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "../assets/styles/globals.css";
-import { Navbar } from "@/components/Navbar";
-import { Footer } from "@/components/Footer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -15,7 +13,10 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Opulence Tools - Luxury Craftsmanship Redefined",
+  title: {
+    default: "Opulence Tools - Luxury Craftsmanship Redefined",
+    template: "%s | Opulence Tools",
+  },
   description: "Exquisite luxury tools and equipment for discerning craftsmen. Unparalleled quality and sophistication in every piece.",
 };
 
@@ -29,13 +30,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <div className="flex flex-col min-h-screen">
-          <Navbar />
-          <main className="grow">
-            {children}
-          </main>
-          <Footer />
-        </div>
+        {children}
       </body>
     </html>
   );
