@@ -53,3 +53,4 @@ tmpclaude-*
 
 # seed
 /db/seed.ts
+/db/seed-data/

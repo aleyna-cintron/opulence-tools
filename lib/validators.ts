@@ -16,3 +16,13 @@ export const insertProductSchema = z.object({
     price: currency
 })
 
+// Schema for signing users in
+export const credentialsSchema = z.object({
+  email: z.email('Invalid email address'),
+  password: z.string().min(6, 'Password must be at least 6 characters')
+})
+
+// Schema for logging users out
+export const signOutFormSchema = z.object({
+
+})

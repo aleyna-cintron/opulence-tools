@@ -1,5 +1,6 @@
 import type { Product } from '@/types/product'
 import type { Product as PrismaProduct } from '@/app/generated/prisma'
+import { hash } from "bcrypt-ts-edge";
 
 export function serializeProduct(p: PrismaProduct): Product {
   return {
@@ -15,11 +16,15 @@ export function serializeProduct(p: PrismaProduct): Product {
 }
 
 export function serializeProducts(products: PrismaProduct[]): Product[] {
-  return products.map(serializeProduct)
+  return products.map(serializeProduct);
 }
 
 
 // Format number with decimal places
 export function formatNumWithDecimal(num: number): string {
   return num.toFixed(2);
+}
+
+export async function saltAndHashPassword(pw: string): Promise<string> {
+  return await hash(pw, 10)
 }
