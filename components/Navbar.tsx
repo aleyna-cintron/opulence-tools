@@ -1,11 +1,21 @@
 'use client';
 
 import Link from 'next/link';
-import { ShoppingCart, Menu, Search, Gem, X } from 'lucide-react';
-import { useState } from 'react';
+import { ShoppingCart, Menu, Search, Gem } from 'lucide-react';
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+  SheetClose,
+} from '@/components/ui/sheet';
 
-export function Navbar() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+interface NavbarProps {
+  userButton?: React.ReactNode;
+}
+
+export function Navbar({ userButton }: NavbarProps) {
   // TODO: Replace with actual cart context when implemented
   const cartCount = 0;
 
@@ -59,12 +69,9 @@ export function Navbar() {
             >
               <Search className="w-5 h-5" />
             </button>
-            <Link
-              href="/sign-in"
-              className="hidden md:block text-sm font-medium text-neutral-600 hover:text-emerald-600 transition-colors"
-            >
-              Sign In
-            </Link>
+            <div className="hidden md:block">
+              {userButton}
+            </div>
             <Link href="/cart" className="relative group">
               <div className="relative">
                 <ShoppingCart className="w-6 h-6 text-neutral-600 group-hover:text-emerald-600 transition-colors" />
@@ -75,50 +82,48 @@ export function Navbar() {
                 )}
               </div>
             </Link>
-            <button
-              className="md:hidden text-neutral-600 hover:text-emerald-600 transition-colors"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              aria-label="Toggle menu"
-              aria-expanded={mobileMenuOpen}
-            >
-              {mobileMenuOpen ? (
-                <X className="w-6 h-6" />
-              ) : (
-                <Menu className="w-6 h-6" />
-              )}
-            </button>
+            {/* Mobile Menu Sheet */}
+            <Sheet>
+              <SheetTrigger asChild>
+                <button
+                  className="md:hidden text-neutral-600 hover:text-emerald-600 transition-colors"
+                  aria-label="Open menu"
+                >
+                  <Menu className="w-6 h-6" />
+                </button>
+              </SheetTrigger>
+              <SheetContent side="right" className="w-[300px] sm:w-[350px]">
+                <SheetHeader>
+                  <SheetTitle className="flex items-center space-x-2">
+                    <div className="w-8 h-8 bg-linear-to-br from-emerald-500 to-emerald-600 rounded-lg flex items-center justify-center">
+                      <Gem className="w-5 h-5 text-white" />
+                    </div>
+                    <span>Menu</span>
+                  </SheetTitle>
+                </SheetHeader>
+                <nav className="flex flex-col space-y-4 mt-8">
+                  {navLinks.map(link => (
+                    <SheetClose asChild key={link.path}>
+                      <Link
+                        href={link.path}
+                        className="text-lg font-medium text-neutral-600 hover:text-emerald-600 transition-colors py-2 border-b border-neutral-100"
+                      >
+                        {link.name}
+                      </Link>
+                    </SheetClose>
+                  ))}
+                  <div className="py-2 border-b border-neutral-100">
+                    {userButton}
+                  </div>
+                  <button className="flex items-center space-x-2 text-lg font-medium text-neutral-600 hover:text-emerald-600 transition-colors py-2">
+                    <Search className="w-5 h-5" />
+                    <span>Search</span>
+                  </button>
+                </nav>
+              </SheetContent>
+            </Sheet>
           </div>
         </div>
-
-        {/* Mobile Menu */}
-        {mobileMenuOpen && (
-          <div className="md:hidden py-4 space-y-3 border-t border-neutral-100 animate-in slide-in-from-top">
-            {navLinks.map(link => (
-              <Link
-                key={link.path}
-                href={link.path}
-                className="block text-sm font-medium text-neutral-600 hover:text-emerald-600 transition-colors py-2"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                {link.name}
-              </Link>
-            ))}
-            <Link
-              href="/sign-in"
-              className="block text-sm font-medium text-neutral-600 hover:text-emerald-600 transition-colors py-2"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Sign In
-            </Link>
-            <button
-              className="flex items-center space-x-2 text-sm font-medium text-neutral-600 hover:text-emerald-600 transition-colors py-2"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              <Search className="w-4 h-4" />
-              <span>Search</span>
-            </button>
-          </div>
-        )}
       </div>
     </nav>
   );

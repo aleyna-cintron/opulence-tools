@@ -1,5 +1,6 @@
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+import UserButton from "@/components/user-button";
 
 export default function RootGroupLayout({
   children,
@@ -8,7 +9,7 @@ export default function RootGroupLayout({
 }>) {
   return (
     <div className="flex flex-col min-h-screen">
-      <Navbar />
+      <Navbar userButton={<UserButton />} />
       <main className="grow">
         {children}
       </main>
