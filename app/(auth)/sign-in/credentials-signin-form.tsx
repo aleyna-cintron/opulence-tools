@@ -1,6 +1,5 @@
 'use client';
 import Link from "next/link"
-import { signIn } from "@/auth"
 import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
 import { signInWithCredentials } from "@/lib/actions/user.action";
@@ -18,7 +17,7 @@ export function CredentialsSignInForm() {
       <button
           disabled={pending}
           className="w-full bg-linear-to-br from-emerald-500 to-emerald-600 text-white py-3 rounded-lg hover:shadow-lg hover:shadow-emerald-500/30 transition-all font-semibold"
-      >{pending ? 'singing in...' : 'Sign In'}</button>
+      >{pending ? 'Signing in...' : 'Sign In'}</button>
     )
   }
 

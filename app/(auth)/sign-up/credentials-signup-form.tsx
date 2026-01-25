@@ -1,48 +1,32 @@
-import Link from "next/link"
-import { signIn } from "@/auth"
-import { hashSync } from "bcrypt-ts-edge"
-import { prisma } from "@/db/client"
-import { redirect } from "next/navigation"
+'use client';
+import Link from "next/link";
+import { useActionState } from "react";
+import { signUpUser } from "@/lib/actions/user.action"
+import { useFormStatus } from "react-dom";
+import { useSearchParams } from "next/navigation";
+
 
 export function CredentialsSignUpForm() {
+  const [data, formAction] = useActionState(signUpUser, { success: false, message: '' })
+  
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get('callbackUrl') || '/'
+
+  const CreateAnAccountButton = () => {
+      const { pending } = useFormStatus(); 
+      return (
+        <button
+            disabled={pending}
+            className="w-full bg-linear-to-br from-emerald-500 to-emerald-600 text-white py-3 rounded-lg hover:shadow-lg hover:shadow-emerald-500/30 transition-all font-semibold"
+        >{pending ? 'Creating an account...' : 'Create an account'}</button>
+      )
+    }
   return (
     <div className="bg-white rounded-xl border border-neutral-200 p-8 shadow-sm">
       <form
-        action={async (formData) => {
-          "use server"
-          const name = formData.get("name") as string
-          const email = formData.get("email") as string
-          const password = formData.get("password") as string
-          const confirmPassword = formData.get("confirmPassword") as string
-
-          if (password !== confirmPassword) {
-            redirect("/sign-up?error=Passwords do not match")
-          }
-
-          const existingUser = await prisma.user.findUnique({
-            where: { email },
-          })
-
-          if (existingUser) {
-            redirect("/sign-up?error=Email already in use")
-          }
-
-          await prisma.user.create({
-            data: {
-              name,
-              email,
-              password: hashSync(password, 10),
-            },
-          })
-
-          await signIn("credentials", {
-            email,
-            password,
-            redirectTo: "/",
-          })
-        }}
+        action={formAction}
         className="space-y-6"
-      >
+      ><input type="hidden" name="callbackUrl" value={callbackUrl} />
         <div>
           <label htmlFor="name" className="block text-sm font-medium text-neutral-700 mb-2">
             Full Name
@@ -99,13 +83,12 @@ export function CredentialsSignUpForm() {
           />
         </div>
 
-        <button
-          type="submit"
-          className="w-full bg-linear-to-br from-emerald-500 to-emerald-600 text-white py-3 rounded-lg hover:shadow-lg hover:shadow-emerald-500/30 transition-all font-semibold"
-        >
-          Create Account
-        </button>
+        <CreateAnAccountButton/>
       </form>
+
+       {data && !data.success && (
+        <div className="text-center text-destructive">{data.message}</div>
+      )}
 
       {/* Divider */}
       <div className="flex items-center my-6">
@@ -116,10 +99,7 @@ export function CredentialsSignUpForm() {
 
       {/* Google sign-up */}
       <form
-        action={async () => {
-          "use server"
-          await signIn("google", { redirectTo: "/" })
-        }}
+        // action={}
       >
         <button
           type="submit"

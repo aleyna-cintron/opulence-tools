@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import { auth } from '@/auth';
-import { signOutUser } from '@/lib/actions/user.action';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,7 +8,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { User, LogOut, Settings } from 'lucide-react';
+import { User, Settings } from 'lucide-react';
+import { SignOutButton } from './signout-button';
 
 const UserButton = async () => {
   const session = await auth();
@@ -55,14 +55,7 @@ const UserButton = async () => {
           </Link>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem asChild>
-          <form action={signOutUser} className="w-full">
-            <button type="submit" className="flex items-center w-full text-red-600">
-              <LogOut className="w-4 h-4 mr-2" />
-              Sign Out
-            </button>
-          </form>
-        </DropdownMenuItem>
+        <SignOutButton />
       </DropdownMenuContent>
     </DropdownMenu>
   );

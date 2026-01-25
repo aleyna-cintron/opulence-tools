@@ -2,14 +2,7 @@
 
 import Link from 'next/link';
 import { ShoppingCart, Menu, Search, Gem } from 'lucide-react';
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-  SheetClose,
-} from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetClose } from '@/components/ui/sheet';
 
 interface NavbarProps {
   userButton?: React.ReactNode;
