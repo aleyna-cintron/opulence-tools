@@ -3,13 +3,15 @@ import Link from "next/link";
 import { useActionState } from "react";
 import { signUpUser } from "@/lib/actions/user.action"
 import { useFormStatus } from "react-dom";
+import type { ActionResult } from "@/lib/errors";
 
 type Props = {
-  callbackUrl: string
+  callbackUrl: string,
 }
 
 export function CredentialsSignUpForm({ callbackUrl }: Props) {
-  const [data, formAction] = useActionState(signUpUser, { success: false, message: '' })
+  const [data, formAction] = useActionState<ActionResult, FormData>(signUpUser,
+                                                                    { success: false, message: [] })
 
   const CreateAnAccountButton = () => {
       const { pending } = useFormStatus(); 
@@ -35,6 +37,7 @@ export function CredentialsSignUpForm({ callbackUrl }: Props) {
             name="name"
             type="text"
             required
+            autoComplete="name"
             className="w-full border border-neutral-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-shadow"
             placeholder="John Doe"
           />
@@ -49,6 +52,7 @@ export function CredentialsSignUpForm({ callbackUrl }: Props) {
             name="email"
             type="email"
             required
+            autoComplete="email"
             className="w-full border border-neutral-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-shadow"
             placeholder="you@example.com"
           />
@@ -62,6 +66,7 @@ export function CredentialsSignUpForm({ callbackUrl }: Props) {
             id="password"
             name="password"
             type="password"
+            autoComplete="new-password"
             required
             className="w-full border border-neutral-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-shadow"
             placeholder="••••••••"
@@ -77,6 +82,7 @@ export function CredentialsSignUpForm({ callbackUrl }: Props) {
             name="confirmPassword"
             type="password"
             required
+            autoComplete="new-password"
             className="w-full border border-neutral-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-shadow"
             placeholder="••••••••"
           />
@@ -86,7 +92,11 @@ export function CredentialsSignUpForm({ callbackUrl }: Props) {
       </form>
 
        {data && !data.success && (
-        <div className="text-center text-destructive">{data.message}</div>
+        <ul className="text-center text-destructive">
+          {data.message.map((msg, i) => (
+            <li key={i}>{msg}</li>
+          ))}
+        </ul>
       )}
 
       {/* Divider */}

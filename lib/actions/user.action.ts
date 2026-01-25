@@ -7,8 +7,12 @@ import { prisma } from '@/db/client'
 import { redirect } from 'next/navigation';
 import { handleError } from "../errors";
 
+type ActionResult = 
+  | { success: true }
+  | { success: false; message: string[] };
+
 // Sign in the user with credentials
-export async function signInWithCredentials(prevState: any, formData: FormData) {
+export async function signInWithCredentials(prevState: ActionResult, formData: FormData): Promise<ActionResult>  {
 
     const parsed = credentialsSchema.safeParse({
         email: formData.get('email'),
@@ -18,14 +22,15 @@ export async function signInWithCredentials(prevState: any, formData: FormData) 
   if (!parsed.success) {
     return handleError(parsed.error);
   }
-
-  const result = await signIn('credentials', {
+  try {
+    const result = await signIn('credentials', {
     ...parsed.data,
     redirect: false  // prevent throwing RedirectError
-  });
+    });
 
-  if (result?.error) {
-    return { success: false, message: 'Invalid email or password' };
+  } catch (error) {
+    return { success: false, message: ['Invalid email or password'] };
+
   }
 
   redirect('/shop');
@@ -37,7 +42,7 @@ export async function signOutUser() {
 }
 
 // Sign up user
-export async function signUpUser(prevState: any, formData: FormData) {
+export async function signUpUser(prevState: ActionResult, formData: FormData): Promise<ActionResult> {
   const parsed = signUpFormSchema.safeParse({
     name: formData.get('name'),
     email: formData.get('email'),

@@ -4,9 +4,11 @@ import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
 import { signInWithCredentials } from "@/lib/actions/user.action";
 import { useSearchParams } from "next/navigation";
+import type { ActionResult } from "@/lib/errors";
 
 export function CredentialsSignInForm() {
-  const [data, action] = useActionState(signInWithCredentials, { success: false, message: '' })
+  const [data, action] = useActionState<ActionResult, FormData>(signInWithCredentials,
+                                                                  { success: false, message: [] })
 
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get('callbackUrl') || '/'
@@ -60,7 +62,11 @@ export function CredentialsSignInForm() {
       </form>
 
       {data && !data.success && (
-        <div className="text-center text-destructive">{data.message}</div>
+        <ul className="text-center text-destructive">
+          {data.message.map((msg, i) => (
+            <li key={i}>{msg}</li>
+          ))}
+        </ul>
       )}
 
       {/* Divider */}
