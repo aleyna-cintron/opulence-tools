@@ -7,7 +7,13 @@ export const metadata: Metadata = {
   title: "Sign Up",
 }
 
-export default function SignUpPage() {
+type Props = {
+  searchParams: Promise<{ callbackUrl?: string }>
+}
+
+export default async function SignUpPage({ searchParams }: Props) {
+  const { callbackUrl } = await searchParams
+
   return (
     <div className="min-h-screen bg-linear-to-br from-neutral-50 via-white to-emerald-50/30 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full">
@@ -26,7 +32,7 @@ export default function SignUpPage() {
           </p>
         </div>
 
-        <CredentialsSignUpForm />
+        <CredentialsSignUpForm callbackUrl={callbackUrl || '/'} />
 
         <p className="mt-8 text-center text-sm text-neutral-500">
           By continuing, you agree to our{" "}

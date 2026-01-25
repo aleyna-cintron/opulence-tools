@@ -76,7 +76,7 @@ export function ProductDetail({ product, relatedProducts }: Props) {
 
             <div className="flex items-baseline space-x-3 mb-6">
               <span className="text-4xl font-bold text-neutral-900">
-                ${product.price.toFixed(2)}
+                ${parseFloat(product.price).toFixed(2)}
               </span>
             </div>
 

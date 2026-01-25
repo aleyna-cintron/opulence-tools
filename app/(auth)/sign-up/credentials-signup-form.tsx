@@ -3,14 +3,13 @@ import Link from "next/link";
 import { useActionState } from "react";
 import { signUpUser } from "@/lib/actions/user.action"
 import { useFormStatus } from "react-dom";
-import { useSearchParams } from "next/navigation";
 
+type Props = {
+  callbackUrl: string
+}
 
-export function CredentialsSignUpForm() {
+export function CredentialsSignUpForm({ callbackUrl }: Props) {
   const [data, formAction] = useActionState(signUpUser, { success: false, message: '' })
-  
-  const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get('callbackUrl') || '/'
 
   const CreateAnAccountButton = () => {
       const { pending } = useFormStatus(); 
