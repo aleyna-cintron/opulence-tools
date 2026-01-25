@@ -2,10 +2,10 @@
 
 import { credentialsSchema, signUpFormSchema } from "../validators";
 import { signIn, signOut } from '@/auth';
-import { isRedirectError } from "next/dist/client/components/redirect-error";
 import { hash } from "bcrypt-ts-edge";
 import { prisma } from '@/db/client'
 import { redirect } from 'next/navigation';
+import { handleError } from "../errors";
 
 // Sign in the user with credentials
 export async function signInWithCredentials(prevState: any, formData: FormData) {
@@ -16,7 +16,7 @@ export async function signInWithCredentials(prevState: any, formData: FormData) 
     });
 
   if (!parsed.success) {
-    return { success: false, message: 'Invalid input' };
+    return handleError(parsed.error);
   }
 
   const result = await signIn('credentials', {
@@ -46,32 +46,28 @@ export async function signUpUser(prevState: any, formData: FormData) {
   });
 
   if (!parsed.success) {
-    return { success: false, message: parsed.error.issues[0].message };
-  }
-
-  const existingUser = await prisma.user.findUnique({
-    where: { email: parsed.data.email }
-  });
-
-  if (existingUser) {
-    return { success: false, message: 'Email already exists' };
+    return handleError(parsed.error);
   }
 
   const hashPw = await hash(parsed.data.password, 10);
 
-  await prisma.user.create({
-    data: {
-      name: parsed.data.name,
-      email: parsed.data.email,
-      password: hashPw
-    }
-  });
+  try {
+    await prisma.user.create({
+      data: {
+        name: parsed.data.name,
+        email: parsed.data.email,
+        password: hashPw
+      }
+    });
+  } catch (error) {
+    return handleError(error);
+  }
 
   await signIn('credentials', {
     email: parsed.data.email,
     password: parsed.data.password,
-    redirect: false 
+    redirect: false
   });
 
-    redirect('/shop');
+  redirect('/shop');
 }
