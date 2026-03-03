@@ -23,7 +23,7 @@ export function CredentialsSignUpForm({ callbackUrl }: Props) {
       )
     }
   return (
-    <div className="bg-white rounded-xl border border-neutral-200 p-8 shadow-sm">
+    <div className="bg-white rounded-xl border border-neutral-200 p-4 sm:p-8 shadow-sm">
       <form
         action={formAction}
         className="space-y-6"

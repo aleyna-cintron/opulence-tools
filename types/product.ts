@@ -1,5 +1,5 @@
 import {z} from 'zod';
-import { insertProductSchema } from '@/lib/validators';
+import { cartItemSchema, insertCartSchema, insertProductSchema } from '@/lib/validators';
 
 // Type for product form validation (insert/update)
 export type ProductInput = z.infer<typeof insertProductSchema>;
@@ -20,3 +20,5 @@ export type Product = {
   updatedAt: string;
 }
 
+export type Cart = z.infer<typeof insertCartSchema>;
+export type CartItem = z.infer<typeof cartItemSchema>;

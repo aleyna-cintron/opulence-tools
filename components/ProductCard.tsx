@@ -1,7 +1,11 @@
+'use client'
 import Link from "next/link"
 import type { Product } from '@/types'
+import { CartContext } from "@/context/CartContext"
+import { useContext } from "react"
 
-export function ProductCard({ product }: {product: Product}) {
+export function ProductCard({ product }: { product: Product }) {
+  const cartContext = useContext(CartContext); 
   return (
     <Link
       href={`/products/${product.slug}`}
@@ -47,9 +51,51 @@ export function ProductCard({ product }: {product: Product}) {
         <p className="text-sm text-neutral-500 line-clamp-2 mb-3">
           {product.description}
         </p>
-        <p className="text-lg font-bold text-neutral-900">
+        <p className="text-lg font-bold text-neutral-900 mb-3">
           ${product.price}
         </p>
+        {/* TODO: replace `false` with actual cart quantity check, e.g. cartQuantity > 0 */}
+        { cartContext.cartItems.some((item) => item.id === product.id) ? (
+          <div className="flex items-center gap-2">
+            <button
+              onClick={(e) => {
+                e.preventDefault()
+                e.stopPropagation()
+                // TODO: decrement quantity / remove from cart if 1
+              }}
+              className="w-8 h-8 flex items-center justify-center border border-neutral-300 text-neutral-600 rounded-md hover:bg-neutral-100 transition-colors cursor-pointer text-lg font-medium"
+            >
+              &minus;
+            </button>
+            <span className="w-8 text-center text-sm font-semibold text-neutral-900">
+              {/* TODO: replace with actual quantity */}
+              {cartContext.cartItems.find((item) => item.id === product.id)?.quantity}
+            </span>
+            <button
+              onClick={(e) => {
+                e.preventDefault()
+                e.stopPropagation()
+                cartContext.addToCart({ ...product, price: parseFloat(product.price), quantity:1 })
+              }}
+              className="w-8 h-8 flex items-center justify-center bg-emerald-600 text-white rounded-md hover:bg-emerald-700 transition-colors cursor-pointer text-lg font-medium"
+            >
+              +
+            </button>
+          </div>
+        ) : (
+          <button
+            onClick={(e) => {
+              e.preventDefault()
+              e.stopPropagation()
+                // TODO: add to cart with quantity 1
+                cartContext.addToCart({ ...product, price: parseFloat(product.price), quantity: 1 })
+                console.log(cartContext.cartItems)
+            }}
+            className="w-full bg-emerald-600 text-white text-sm font-medium py-2 px-3 rounded-md hover:bg-emerald-700 transition-colors cursor-pointer"
+          >
+            Add to Cart
+          </button>
+        )}
       </div>
     </Link>
   )

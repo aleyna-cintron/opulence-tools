@@ -8,7 +8,7 @@ import type { ActionResult } from "@/lib/errors";
 
 export function CredentialsSignInForm() {
   const [data, action] = useActionState<ActionResult, FormData>(signInWithCredentials,
-                                                                  { success: false, message: [] })
+    { success: false, message: [] })
 
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get('callbackUrl') || '/'
@@ -24,7 +24,7 @@ export function CredentialsSignInForm() {
   }
 
   return (
-    <div className="bg-white rounded-xl border border-neutral-200 p-8 shadow-sm">
+    <div className="bg-white rounded-xl border border-neutral-200 p-4 sm:p-8 shadow-sm">
       <form
         action={action}
         className="space-y-6"

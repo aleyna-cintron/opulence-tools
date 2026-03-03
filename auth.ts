@@ -49,13 +49,35 @@ export const config = {
     ],
     callbacks: {
         async session({ session, user, trigger, token }: any) {
+
+            // set variables in token
             session.user.id = token.sub;
+            session.user.role = token.role;
+            session.user.name = token.name
+
             if (trigger === 'update') {
                 session.user.name = user.name;
             }
             
             return session;
         },
+        async jwt({ token, user, trigger, session }: any) {
+            if (user) {
+                token.role = user.role;
+
+                // Create a default name if no name is assigned
+                if (user.name === 'NO_NAME') {
+                    token.name = user.email!.split('@')[0];
+
+                    // Update user name in DB
+                    await prisma.user.update({
+                        where: { id: user.id },
+                        data: {name: token.name}
+                    })
+                }
+                return token;
+            }
+        }
     }
 } satisfies NextAuthConfig;
 

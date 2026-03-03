@@ -37,8 +37,8 @@ const UserButton = async () => {
       <DropdownMenuContent align="end" className="w-56">
         <DropdownMenuLabel>
           <div className="flex flex-col">
-            <span className="font-medium">{session.user?.name}</span>
-            <span className="text-xs text-neutral-500">{session.user?.email}</span>
+            <span className="font-medium truncate">{session.user?.name}</span>
+            <span className="text-xs text-neutral-500 truncate">{session.user?.email}</span>
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
